@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download</title>
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div>
+    <table class="addressBar">
+        <tr>
+            <th><a style="text-decoration: none;" href="<%=dir[0]%>/">Root</a><i id="caret" class="fa fa-caret-right" aria-hidden="true"></i></th>
+            <% for(var l=1; l < dir.length; l++) {%>
+            <th><a style="text-decoration: none;" href="<%=dir.slice(0,l+1).join("/")%>"><%=dir[l]%></a><i id="caret" class="fa fa-caret-right" aria-hidden="true"></i></th>
+            <% } %>
+        </tr>
+    </table>
+
+    <table class="files">
+        <tr class="header">
+            <th>Name</th>
+            <th>Date Modified</th>
+            <th id="size">Size</th>
+        </tr>
+        <% for(var i=0; i < files.length; i++) {%>
+        <tr>
+            <th style="text-align: left"><i class="<%= files[i].directory ? "fa fa-folder": files[i].fileIcon%>" aria-hidden="true"></i><a title="<%=dir.join("/")+"/"+files[i].name%>" href= "<%=dir.join("/")+"/"+files[i].name%>"><%= files[i].name%></a></th>
+            <th><%= files[i].dateModified%></th>
+            <th style="text-align: right"><%= files[i].size +" bytes"%></th>
+        </tr>
+        <% } %>
+    </table>
+</div>
+</body>
+</html>

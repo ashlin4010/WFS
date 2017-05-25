@@ -1,0 +1,68 @@
+body{
+    color:white;
+    background-color:#222222;
+    font-family: Roboto Condensed,sans-serif;
+}
+
+div{
+    border: 10px solid #333333;
+    width:800px;
+    position: relative;
+    top: 50px;
+    margin: auto;
+}
+
+a{
+    text-decoration:none;
+    color:white;
+    padding-right: 10px;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+i{
+    margin: 0 10px;
+    color: #c70640;
+}
+
+i#caret{
+    margin: 0;
+    padding-left: 6px;
+}
+
+tr.header th{
+    padding: 25px 50px;
+}
+
+tr.header th{
+    padding: 25px 50px;
+}
+
+table.addressBar{
+    outline: 5px solid #333333;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.addressBar tr{
+    float: left;
+}
+
+th#size{
+    padding: 0;
+    text-align:center;
+}
+
+table.addressBar tr th:hover{
+    background-color: #c70640;
+}
+
+table.addressBar tr th a{
+    padding: 1px 0 1px 5px;
+}
+
+i.fa.fa-laptop{
+    font-size: 13px;
+}
