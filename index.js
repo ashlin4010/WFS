@@ -1,18 +1,18 @@
 /**
  * Created by Ashlin Inwood on 5/05/2017.
  */
-var express = require('express');
-var favicon = require('serve-favicon');
-var fs = require('fs');
-var path = require('path');
-var app = express();
+const express = require('express');
+const favicon = require('serve-favicon');
+const fs = require('fs');
+const path = require('path');
+let app = express();
 
 //Root directory for files
-var homeDir = __dirname + '/Send';
-//var homeDir = "E:/Documents";
+//let homeDir = __dirname + '/Send';
+let homeDir = "E:/Documents";
 
 //The url path
-var url = "";
+let url = "";
 
 //Set the view engine
 app.set('view engine', 'ejs');
@@ -31,13 +31,13 @@ app.get('/favicon.ico', function(req, res) {
 app.get(url+'*', function(req, res) {
 
     //This is the file address on the machine
-    var workingDir = homeDir;
+    let workingDir = homeDir;
 
     //This is the last known working Address with /url at the start
-    var workingAddress = url;
+    let workingAddress = url;
 
     //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
-    var address;
+    let address;
 
     //makes address
     address = decodeURI(req.path).substring(url.length);
@@ -45,24 +45,20 @@ app.get(url+'*', function(req, res) {
         address = address.slice(0, -1);
     }
     address = address.split("/");
-    if (address[0] == "") {
-        address.shift();
-    }
+    if (address[0] === "") address.shift();
 
     //workingAddress shod not have "/" at the end
-    if (workingAddress.endsWith("/")) {
-        workingAddress = workingAddress.slice(0, -1);
-    }
+    if (workingAddress.endsWith("/")) workingAddress = workingAddress.slice(0, -1);
     workingAddress = [workingAddress];
 
     //Is the stuff after url is working directory(s) if so add it to the end of workingAddress and workingDir.
-    for (var i = 0; i < address.length; i++) {
+    for (let i = 0; i < address.length; i++) {
         if (presentInArray(findFiles(workingDir), address[i]) && fs.lstatSync(workingDir + "/" + address[i]).isDirectory()) {
             workingAddress.push(address[i]);
             workingDir = workingDir + "/" + address[i];
         }
         else if (!presentInArray(findFiles(workingDir), address[i])){
-            res.redirect((workingAddress.join("/") == "") ? "/": workingAddress.join("/"));
+            res.redirect((workingAddress.join("/") === "") ? "/": workingAddress.join("/"));
             return
         }
     }
@@ -90,12 +86,12 @@ function findFiles(dir) {
 
 //Gets all the information that is render to the page each file is and object in an array
 function fileInfo(dir) {
-    var files = fs.readdirSync(dir);
-    var output = [];
-    for (var i = 0; i < files.length; i++) {
-        var fileIcon = fileExtension(files[i]);
-        var info = fs.lstatSync(dir + "/" + files[i]);
-        var file = {
+    let files = fs.readdirSync(dir);
+    let output = [];
+    for (let i = 0; i < files.length; i++) {
+        let fileIcon = fileExtension(files[i]);
+        let info = fs.lstatSync(dir + "/" + files[i]);
+        let file = {
             name: files[i],
             dateModified: formatDate(info.mtime),
             directory: info.isDirectory(),
@@ -109,11 +105,11 @@ function fileInfo(dir) {
 
 //Makes the time look good
 function formatDate(date) {
-    var day = date.getDate();
-    var month = date.getMonth();
-    var year = date.getFullYear();
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
 
     if (month.toString().length < 2){
         month = "0"+month.toString();
@@ -126,26 +122,26 @@ function formatDate(date) {
 
 //Is obj in the array?? returns bool
 function presentInArray(arr,obj) {
-    return (arr.indexOf(obj) != -1);
+    return (arr.indexOf(obj) !== -1);
 }
 
 //What extension shod be ues returns a sting that is a class for awesome font
 function fileExtension(fileName) {
     //The extension that go with what icon
-    var audio = [".wav",".mp3",".ogg",".gsm",".dct",".flac",".au",".aiff",".vox"];
-    var powerpoint = [".pptx",".pptm",".ppt",".xps",".potx",".potm",",pot",".thmx",".pps",".ppsx",".ppsm",".ppt",".ppam",".ppa"];
-    var pdf = [".pdf"];
-    var code = [".js",".c",".ejs",".json",".class",".cmd",".cpp"];
-    var archive = [".raw",".zip","iso",".ARJ",".TAR",".GZ",".TGZ"];
-    var spreadsheet = [".gnumeric",".ods",".xls",".xlsx",".xlsm",".xlsb",".xlt",".xml",".xlam"];
-    var text = [".txt",".docx",".docm",".doc",".dot",".wbk",".dotx",".dotm",".docb"];
-    var video = [".webm",".mkv",".flv",".vob",".ogv",".drc",".mng",".gifv",".vai",".mov",".qt",".wmv",".yuv",".rm",".rmvb",".asf",".amv",".mp4",".m4p",".m4v",".mpg",".mpeg",".m2v",".svi",".3gp",".svi",".3g2",".mxf",".roq",".nsv",".flv",".f4v",".f4p",".f4a",".f4b"];
-    var image = [,".tif",".tiff",".gif",".jpeg",".jpg",".jif",".jfif",".jp2",".jpx",".j2k",".j2c",".fpx",".pcd",".png"];
-    var chrome = [".html"]; //html
-    var executable = [".bat",".sh",".exe"];
+    let audio = [".wav",".mp3",".ogg",".gsm",".dct",".flac",".au",".aiff",".vox"];
+    let powerpoint = [".pptx",".pptm",".ppt",".xps",".potx",".potm",",pot",".thmx",".pps",".ppsx",".ppsm",".ppt",".ppam",".ppa"];
+    let pdf = [".pdf"];
+    let code = [".js",".c",".ejs",".json",".class",".cmd",".cpp"];
+    let archive = [".raw",".zip","iso",".ARJ",".TAR",".GZ",".TGZ"];
+    let spreadsheet = [".gnumeric",".ods",".xls",".xlsx",".xlsm",".xlsb",".xlt",".xml",".xlam"];
+    let text = [".txt",".docx",".docm",".doc",".dot",".wbk",".dotx",".dotm",".docb"];
+    let video = [".webm",".mkv",".flv",".vob",".ogv",".drc",".mng",".gifv",".vai",".mov",".qt",".wmv",".yuv",".rm",".rmvb",".asf",".amv",".mp4",".m4p",".m4v",".mpg",".mpeg",".m2v",".svi",".3gp",".svi",".3g2",".mxf",".roq",".nsv",".flv",".f4v",".f4p",".f4a",".f4b"];
+    let image = [,".tif",".tiff",".gif",".jpeg",".jpg",".jif",".jfif",".jp2",".jpx",".j2k",".j2c",".fpx",".pcd",".png"];
+    let chrome = [".html"]; //html
+    let executable = [".bat",".sh",".exe"];
 
     //Get the Extension for the files name
-    var Extension = path.extname(fileName);
+    let Extension = path.extname(fileName);
 
     //matches the extension to the icon and return the result
     //I might replace this with a switch
