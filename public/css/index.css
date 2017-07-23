@@ -82,3 +82,8 @@ table.addressBar tr th a{
 i.fa.fa-laptop{
     font-size: 13px;
 }
+
+input{
+    border: none;
+    padding-left: 13px;
+}
