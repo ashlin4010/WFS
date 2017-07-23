@@ -1,12 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ondragenter="document.getElementById('dropBox').style.pointerEvents = 'auto';" onmouseover="document.getElementById('dropBox').style.pointerEvents = 'none';">
 <head>
     <meta charset="UTF-8">
     <title>Download</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css">
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
+    <script src="js/dropbox.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
 </head>
 <body>
+<div class="droppable" id="dropBox"></div>
+<script>
+    var element = document.querySelector('.droppable');
+    makeDroppable(element, callback);
+    function callback(files) {
+
+        console.log(files);
+        var formData = new FormData();
+        formData.append("files", files[0]);
+
+        $.ajax({
+            url: 'http://localhost/upload',
+            method: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log("success on file up load")
+            }
+        })
+    }
+</script>
 <div>
     <table class="addressBar">
         <tr>

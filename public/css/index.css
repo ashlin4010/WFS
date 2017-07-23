@@ -4,12 +4,28 @@ body{
     font-family: Roboto Condensed,sans-serif;
 }
 
+body, html{
+    margin:0;
+    padding:0;
+}
+
 div{
     border: 10px solid #333333;
     width:800px;
-    position: relative;
     top: 50px;
     margin: auto;
+}
+
+body div#dropBox{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events:none;
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 
 a{
