@@ -5,8 +5,8 @@
     <title>Download</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css">
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
-    <script src="js/dropbox.js"></script>
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="/js/dropbox.js"></script>
+    <script src="/js/jquery-3.2.1.min.js"></script>
 </head>
 <body>
 <div class="droppable" id="dropBox"></div>
@@ -20,7 +20,7 @@
         formData.append("files", files[0]);
 
         $.ajax({
-            url: 'http://localhost/upload',
+            url: window.location.pathname,
             method: 'post',
             data: formData,
             processData: false,

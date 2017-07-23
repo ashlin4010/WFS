@@ -5,6 +5,8 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const fs = require('fs');
 const path = require('path');
+const Busboy = require('busboy');
+
 let app = express();
 
 //Root directory for files
@@ -27,17 +29,48 @@ app.get('/favicon.ico', function(req, res) {
     res.sendStatus(204);
 });
 
+//uploaded file
+app.post('*', function(req, res) {
+
+    let address; //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
+
+    //removes url string from url
+    address = decodeURI(req.path).substring(url.length);
+    if (address.endsWith("/")) {
+        address = address.slice(0, -1);
+    }
+
+    let busboy = new Busboy({ headers: req.headers });
+
+    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+        console.log('Upload started; filename: ' + filename + ', encoding: ' + encoding);
+
+        file.on('data', function(data) {
+            console.log('filename [' + filename + '] got ' + data.length + ' bytes');
+        });
+
+        file.on('end', function() {
+            console.log('Upload ended; filename: ' + filename + ', encoding: ' + encoding);
+        });
+
+        let saveTo = path.join(homeDir,path.join(address, path.basename(filename)));
+        file.pipe(fs.createWriteStream(saveTo));
+    });
+
+    busboy.on('finish', function() {
+        res.writeHead(303, { Connection: 'close', Location: req.get('referer') });
+        res.end();
+    });
+
+    req.pipe(busboy);
+});
+
 //This will listen for everything after the url path
 app.get(url+'*', function(req, res) {
 
-    //This is the file address on the machine
-    let workingDir = homeDir;
-
-    //This is the last known working Address with /url at the start
-    let workingAddress = url;
-
-    //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
-    let address;
+    let workingDir = homeDir; //This is the address where we will be reading, changing or downloading files form
+    let workingAddress = url; //This is the last known working Address with /url at the start
+    let address;     //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
 
     //makes address
     address = decodeURI(req.path).substring(url.length);
