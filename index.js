@@ -6,30 +6,34 @@ const favicon = require('serve-favicon');
 const fs = require('fs');
 const path = require('path');
 const Busboy = require('busboy');
-
 let app = express();
+let configJson = {
+    "rootDir": path.join(__dirname, 'Send'),
+    "URLPrecursors":""
+};//config
 
-//Root directory for files
-//let homeDir = __dirname + '/Send';
-let homeDir = "E:/Documents";
+try {
+    configJson = require('./config.json');
+}//load config file
+catch(e) {
+    if (e.code !== 'MODULE_NOT_FOUND') throw e;
+    fs.writeFileSync(path.join(__dirname,"config.json"),JSON.stringify(configJson));
+}//make config file
 
-//The url path
-let url = "";
+let homeDir = configJson.rootDir; //Root directory for files
 
-//Set the view engine
-app.set('view engine', 'ejs');
+let url = configJson.URLPrecursors; //some text that can go before the rest of the url path
 
-// Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs'); //Set the view engine to ejs
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(express.static(path.join(__dirname, 'public')));//Set path to static files
 
-//f**K off favicon.ico
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));//Set the path favicon
+
 app.get('/favicon.ico', function(req, res) {
     res.sendStatus(204);
-});
+});//F**K off favicon.ico
 
-//uploaded file
 app.post('*', function(req, res) {
 
     let address; //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
@@ -42,7 +46,7 @@ app.post('*', function(req, res) {
 
     let busboy = new Busboy({ headers: req.headers });
 
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    busboy.on('file', function(fieldname, file, filename, encoding) {
         console.log('Upload started; filename: ' + filename + ', encoding: ' + encoding);
 
         file.on('data', function(data) {
@@ -53,8 +57,10 @@ app.post('*', function(req, res) {
             console.log('Upload ended; filename: ' + filename + ', encoding: ' + encoding);
         });
 
+        if(filename){
         let saveTo = path.join(homeDir,path.join(address, path.basename(filename)));
         file.pipe(fs.createWriteStream(saveTo));
+        }
     });
 
     busboy.on('finish', function() {
@@ -63,20 +69,18 @@ app.post('*', function(req, res) {
     });
 
     req.pipe(busboy);
-});
+});//Handles file upload over post
 
-//This will listen for everything after the url path
 app.get(url+'*', function(req, res) {
 
-    let workingDir = homeDir; //This is the address where we will be reading, changing or downloading files form
-    let workingAddress = url; //This is the last known working Address with /url at the start
-    let address;     //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
+    let workingDir = homeDir;   //This is the address where we will be reading, changing or downloading files form
+    let workingAddress = url;   //This is the last known working Address with /url at the start
+    let address;                //Address is the stuff after url in a array without "/" and url example http:/localhost/url/it/gets/this/stuff ==> ["it","gets","this","stuff"]
 
     //makes address
-    address = decodeURI(req.path).substring(url.length);
-    if (address.endsWith("/")) {
-        address = address.slice(0, -1);
-    }
+    address = decodeURI(req.path).substring(url.length); //remove url
+    if (address.endsWith("/")) address = address.slice(0, -1);
+
     address = address.split("/");
     if (address[0] === "") address.shift();
 
@@ -86,9 +90,9 @@ app.get(url+'*', function(req, res) {
 
     //Is the stuff after url is working directory(s) if so add it to the end of workingAddress and workingDir.
     for (let i = 0; i < address.length; i++) {
-        if (presentInArray(findFiles(workingDir), address[i]) && fs.lstatSync(workingDir + "/" + address[i]).isDirectory()) {
+        if (presentInArray(findFiles(workingDir), address[i]) && fs.lstatSync(path.join(workingDir,address[i])).isDirectory()) {
             workingAddress.push(address[i]);
-            workingDir = workingDir + "/" + address[i];
+            workingDir = path.join(workingDir,address[i]);
         }
         else if (!presentInArray(findFiles(workingDir), address[i])){
             res.redirect((workingAddress.join("/") === "") ? "/": workingAddress.join("/"));
@@ -99,31 +103,29 @@ app.get(url+'*', function(req, res) {
     //Is the stuff after url is not working directory(s) but does exist on the machine then it must be a file so download it.
     if (presentInArray(findFiles(workingDir), address[address.length - 1])) {
         console.log('Downloading ' + address[address.length - 1]);
-        res.download(homeDir + "/" + address.join("/"));
+        res.download(path.join(homeDir,address.join("/")));
     }
-    else {//Don't need to download a file and found all the working directories so render the page
-        console.log("Navigated to " + workingAddress.join("/"));
+    else {
+        console.log("Navigated to " + (workingAddress.join("/") === "" ? "Root": workingAddress.join("/"))); //stop it printing "Navigated to "
         res.render('index', {files: fileInfo(workingDir), dir: workingAddress});
-    }
-});
+    } //Don't need to download a file and found all the working directories so render the page
 
-//start the http server
+}); //based of where the url references a file or a dir it will render a web page or download that file
+
 app.listen(80, function () {
     console.log("http://localhost:80"+url);
-});
+}); //Start the http server
 
-//Use with presentInArray to see if file exist returns a array
 function findFiles(dir) {
     return fs.readdirSync(dir);
-}
+} //Returns an array of files and directories in a directory
 
-//Gets all the information that is render to the page each file is and object in an array
 function fileInfo(dir) {
     let files = fs.readdirSync(dir);
     let output = [];
     for (let i = 0; i < files.length; i++) {
         let fileIcon = fileExtension(files[i]);
-        let info = fs.lstatSync(dir + "/" + files[i]);
+        let info = fs.lstatSync(path.join(dir,files[i]));
         let file = {
             name: files[i],
             dateModified: formatDate(info.mtime),
@@ -134,9 +136,8 @@ function fileInfo(dir) {
         output.push(file);
     }
     return output;
-}
+} //Gets all the information that is render to the page each file is and object in an array
 
-//Makes the time look good
 function formatDate(date) {
     let day = date.getDate();
     let month = date.getMonth();
@@ -151,14 +152,12 @@ function formatDate(date) {
         minutes = "0"+minutes.toString();
     }
     return day+"/"+month+"/"+year+" "+hours+":"+minutes;
-}
+} //Makes the time look good
 
-//Is obj in the array?? returns bool
 function presentInArray(arr,obj) {
     return (arr.indexOf(obj) !== -1);
-}
+} //Is obj in the array?? returns bool
 
-//What extension shod be ues returns a sting that is a class for awesome font
 function fileExtension(fileName) {
     //The extension that go with what icon
     let audio = [".wav",".mp3",".ogg",".gsm",".dct",".flac",".au",".aiff",".vox"];
@@ -202,4 +201,4 @@ function fileExtension(fileName) {
         return "fa fa-laptop"
     }
     return "fa fa-file-o"
-}
+} //Returns a sting that is a class for awesome font
