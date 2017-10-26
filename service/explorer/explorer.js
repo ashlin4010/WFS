@@ -98,47 +98,47 @@ function presentInArray(arr,obj) {
 
 function fileExtension(fileName) {
     //The extension that go with what icon
-    let audio = [".wav",".mp3",".ogg",".gsm",".dct",".flac",".au",".aiff",".vox"];
-    let powerpoint = [".pptx",".pptm",".ppt",".xps",".potx",".potm",",pot",".thmx",".pps",".ppsx",".ppsm",".ppt",".ppam",".ppa"];
+    let audio = [".wav", ".mp3", ".ogg", ".gsm", ".dct", ".flac", ".au", ".aiff", ".vox"];
+    let powerpoint = [".pptx", ".pptm", ".ppt", ".xps", ".potx", ".potm", ",pot", ".thmx", ".pps", ".ppsx", ".ppsm", ".ppt", ".ppam", ".ppa"];
     let pdf = [".pdf"];
-    let code = [".js",".c",".ejs",".json",".class",".cmd",".cpp"];
-    let archive = [".raw",".zip","iso",".ARJ",".TAR",".GZ",".TGZ"];
-    let spreadsheet = [".gnumeric",".ods",".xls",".xlsx",".xlsm",".xlsb",".xlt",".xml",".xlam"];
-    let text = [".txt",".docx",".docm",".doc",".dot",".wbk",".dotx",".dotm",".docb"];
-    let video = [".webm",".mkv",".flv",".vob",".ogv",".drc",".mng",".gifv",".vai",".mov",".qt",".wmv",".yuv",".rm",".rmvb",".asf",".amv",".mp4",".m4p",".m4v",".mpg",".mpeg",".m2v",".svi",".3gp",".svi",".3g2",".mxf",".roq",".nsv",".flv",".f4v",".f4p",".f4a",".f4b"];
-    let image = [,".tif",".tiff",".gif",".jpeg",".jpg",".jif",".jfif",".jp2",".jpx",".j2k",".j2c",".fpx",".pcd",".png"];
+    let code = [".js", ".c", ".ejs", ".json", ".class", ".cmd", ".cpp"];
+    let archive = [".raw", ".zip", "iso", ".ARJ", ".TAR", ".GZ", ".TGZ"];
+    let spreadsheet = [".gnumeric", ".ods", ".xls", ".xlsx", ".xlsm", ".xlsb", ".xlt", ".xml", ".xlam"];
+    let text = [".txt", ".docx", ".docm", ".doc", ".dot", ".wbk", ".dotx", ".dotm", ".docb"];
+    let video = [".webm", ".mkv", ".flv", ".vob", ".ogv", ".drc", ".mng", ".gifv", ".vai", ".mov", ".qt", ".wmv", ".yuv", ".rm", ".rmvb", ".asf", ".amv", ".mp4", ".m4p", ".m4v", ".mpg", ".mpeg", ".m2v", ".svi", ".3gp", ".svi", ".3g2", ".mxf", ".roq", ".nsv", ".flv", ".f4v", ".f4p", ".f4a", ".f4b"];
+    let image = [, ".tif", ".tiff", ".gif", ".jpeg", ".jpg", ".jif", ".jfif", ".jp2", ".jpx", ".j2k", ".j2c", ".fpx", ".pcd", ".png"];
     let chrome = [".html"]; //html
-    let executable = [".bat",".sh",".exe"];
+    let executable = [".bat", ".sh", ".exe"];
 
     //Get the Extension for the files name
     let Extension = path.extname(fileName);
 
     //matches the extension to the icon and return the result
     //I might replace this with a switch
-    if(presentInArray(audio,Extension)){
-        return {type: "audio", icon:"fa fa-file-audio-o"};
-    }else if(presentInArray(powerpoint,Extension)){
-        return {type: "powerpoint", icon:"fa fa-file-powerpoint-o"};
-    }else if(presentInArray(pdf,Extension)){
-        return {type: "pdf", icon:"fa fa-file-pdf-o"};
-    }else if(presentInArray(code,Extension)){
+    if (presentInArray(audio, Extension)) {
+        return {type: "audio", icon: "fa fa-file-audio-o"};
+    } else if (presentInArray(powerpoint, Extension)) {
+        return {type: "powerpoint", icon: "fa fa-file-powerpoint-o"};
+    } else if (presentInArray(pdf, Extension)) {
+        return {type: "pdf", icon: "fa fa-file-pdf-o"};
+    } else if (presentInArray(code, Extension)) {
         return {type: "code", icon: "fa fa-file-code-o"};
-    }else if(presentInArray(archive,Extension)){
+    } else if (presentInArray(archive, Extension)) {
         return {type: "archive", icon: "fa fa-file-archive-o"};
-    }else if(presentInArray(spreadsheet,Extension)){
+    } else if (presentInArray(spreadsheet, Extension)) {
         return {type: "spreadsheet", icon: "fa fa-file-excel-o"};
-    }else if(presentInArray(text,Extension)){
+    } else if (presentInArray(text, Extension)) {
         return {type: "text", icon: "fa fa-file-text-o"};
-    }else if(presentInArray(video,Extension)){
+    } else if (presentInArray(video, Extension)) {
         return {type: "video", icon: "fa fa-file-video-o"};
-    }else if(presentInArray(image,Extension)){
+    } else if (presentInArray(image, Extension)) {
         return {type: "image", icon: "fa fa-file-image-o"};
-    }else if(presentInArray(chrome,Extension)){
+    } else if (presentInArray(chrome, Extension)) {
         return {type: "html", icon: "fa fa-chrome"};
-    }else if(presentInArray(executable,Extension)){
+    } else if (presentInArray(executable, Extension)) {
         return {type: "executable", icon: "fa fa-laptop"};
     }
-    return "fa fa-file-o"
+    return {type: "unknown", icon: "fa fa-file-o"}
 } //Returns a sting that is a class for awesome font
 
 module.exports = router;

@@ -23,7 +23,10 @@ app.use("/",explorer);
 app.use("/",upload);
 app.use("/",videoPlayer);
 
+app.get("/",function (req, res) {
+   res.redirect("/"+config.URLPrecursors.explorer);
+});
+
 app.listen(80, function () {
     console.log("http://localhost:80"+"/"+config.URLPrecursors.explorer);
 }); //Start the http server
-
