@@ -20,7 +20,7 @@
         formData.append("files", files[0]);
 
         $.ajax({
-            url: window.location.pathname,
+            url: "/<%=(path.join(url.upload,dir.join("/"))).replace(/\\/g, "/")%>",
             method: 'post',
             data: formData,
             processData: false,
@@ -34,9 +34,12 @@
 <div>
     <table class="addressBar">
         <tr>
-            <th><a style="text-decoration: none;" href="<%=dir[0]%>/">Root</a><i id="caret" class="fa fa-caret-right" aria-hidden="true"></i></th>
-            <% for(var l=1; l < dir.length; l++) {%>
-            <th><a style="text-decoration: none;" href="<%=dir.slice(0,l+1).join("/")%>"><%=dir[l]%></a><i id="caret" class="fa fa-caret-right" aria-hidden="true"></i></th>
+            <th><a style="text-decoration: none;" href="/<%=url.explorer%>">Root</a><i id="caret" class="fa fa-caret-right" aria-hidden="true"></i></th>
+            <% for(var l=0; l < dir.length; l++) {%>
+            <th>
+                <a style="text-decoration: none;" href="/<%=(path.join(url.explorer,dir.slice(0,l+1).join("/"))).replace(/\\/g, "/")%>/"><%=dir[l]%></a>
+                <i id="caret" class="fa fa-caret-right" aria-hidden="true"></i>
+            </th>
             <% } %>
         </tr>
     </table>
@@ -49,13 +52,17 @@
         </tr>
         <% for(var i=0; i < files.length; i++) {%>
         <tr>
-            <th style="text-align: left"><i class="<%= files[i].directory ? "fa fa-folder": files[i].fileIcon%>" aria-hidden="true"></i><a title="<%=dir.join("/")+"/"+files[i].name%>" href= "<%=dir.join("/")+"/"+files[i].name%>"><%= files[i].name%></a></th>
-            <th><%= files[i].dateModified%></th>
-            <th style="text-align: right"><%= files[i].size +" bytes"%></th>
+            <th style="text-align: left">
+                <i class="<%= files[i].directory ? "fa fa-folder": files[i].fileIcon%>" aria-hidden="true"></i>
+                <a title="<%=("/"+path.join(url.explorer,dir.join("/"),files[i].name)).replace(/\\/g, "/")%>" href= "<%=("/"+path.join(url.explorer,dir.join("/"),files[i].name)).replace(/\\/g, "/")%>"><%=files[i].name%></a>
+            </th>
+            <th><%=files[i].dateModified%></th>
+            <th style="text-align: right"><%=files[i].size +" bytes"%></th>
         </tr>
         <% } %>
     </table>
-    <form ref='uploadForm'
+    <form action="/<%=(path.join(url.upload,dir.join("/"))).replace(/\\/g, "/")%>"
+          ref='uploadForm'
           id='uploadForm'
           method='post'
           encType="multipart/form-data">
