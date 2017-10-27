@@ -47,7 +47,7 @@
     <table class="files">
         <tr class="header">
             <th>Name</th>
-            <th>Open</th>
+            <th>Download</th>
             <th>Date Modified</th>
             <th id="size">Size</th>
         </tr>
@@ -55,11 +55,15 @@
         <tr>
             <th style="text-align: left">
                 <i class="<%=files[i].directory ? "fa fa-folder": files[i].fileIcon%>" aria-hidden="true"></i>
-                <a class="text" title="<%=("/"+path.join(url.explorer,dir.join("/"),files[i].name)).replace(/\\/g, "/")%>" href= "<%=("/"+path.join(url.explorer,dir.join("/"),files[i].name)).replace(/\\/g, "/")%>"><%=files[i].name%></a>
+                <a class="text" title="<%=("/"+path.join(url.explorer,dir.join("/"),files[i].name)).replace(/\\/g, "/")%>" href="<%=files[i].action !== "none" ? ("/"+path.join(files[i].action,dir.join("/"),files[i].name)).replace(/\\/g, "/") : "#" %>"><%=files[i].name%></a>
             </th>
-            <th><a href="<%= files[i].type === "video" ? ("/"+path.join(url.videoPlayer,dir.join("/"),files[i].name)).replace(/\\/g, "/") : "#" %>"><i class="fa fa-external-link" aria-hidden="true"></i></a></th>
+            <th>
+                <a href="<%=("/"+path.join(url.explorer,dir.join("/"),files[i].name)).replace(/\\/g, "/")%>">
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                </a>
+            </th>
             <th><%=files[i].dateModified%></th>
-            <th style="text-align: right"><%=files[i].size +" bytes"%></th>
+            <th style="text-align: right"><%=files[i].size%></th>
         </tr>
         <% } %>
     </table>

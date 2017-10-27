@@ -10,6 +10,8 @@ const config = require("./lib/config");
 const explorer = require("./service/explorer/explorer.js");
 const upload = require("./service/upload/upload.js");
 const videoPlayer = require("./service/videoPlayer/vp.js");
+const audioPlayer = require("./service/audio.js");
+const image = require("./service/image.js");
 
 app.set('view engine', 'ejs'); //Set the view engine to ejs
 app.use(express.static(path.join(__dirname, 'public')));//Set path to static files for webPage stuff
@@ -22,6 +24,9 @@ app.get('/favicon.ico', function(req, res) {
 app.use("/",explorer);
 app.use("/",upload);
 app.use("/",videoPlayer);
+app.use("/",audioPlayer);
+app.use("/",image);
+
 
 app.get("/",function (req, res) {
    res.redirect("/"+config.URLPrecursors.explorer);

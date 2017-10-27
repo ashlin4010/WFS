@@ -67,9 +67,10 @@ function fileInfo(dir) {
             name: files[i],
             dateModified: formatDate(info.mtime),
             directory: info.isDirectory(),
-            size: info.size,
+            size: toHumanSize(info.size),
             type: Extension.type,
-            fileIcon: Extension.icon
+            fileIcon: Extension.icon,
+            action: Extension.action
         };
         output.push(file);
     }
@@ -101,7 +102,7 @@ function fileExtension(fileName) {
     let audio = [".wav", ".mp3", ".ogg", ".gsm", ".dct", ".flac", ".au", ".aiff", ".vox"];
     let powerpoint = [".pptx", ".pptm", ".ppt", ".xps", ".potx", ".potm", ",pot", ".thmx", ".pps", ".ppsx", ".ppsm", ".ppt", ".ppam", ".ppa"];
     let pdf = [".pdf"];
-    let code = [".js", ".c", ".ejs", ".json", ".class", ".cmd", ".cpp"];
+    let code = [".js", ".c", ".ejs", ".json", ".class", ".cmd", ".cpp",".py"];
     let archive = [".raw", ".zip", "iso", ".ARJ", ".TAR", ".GZ", ".TGZ"];
     let spreadsheet = [".gnumeric", ".ods", ".xls", ".xlsx", ".xlsm", ".xlsb", ".xlt", ".xml", ".xlam"];
     let text = [".txt", ".docx", ".docm", ".doc", ".dot", ".wbk", ".dotx", ".dotm", ".docb"];
@@ -116,29 +117,45 @@ function fileExtension(fileName) {
     //matches the extension to the icon and return the result
     //I might replace this with a switch
     if (presentInArray(audio, Extension)) {
-        return {type: "audio", icon: "fa fa-file-audio-o"};
+        return {type: "audio", icon: "fa fa-file-audio-o", action: config.URLPrecursors.audioPlayer};
     } else if (presentInArray(powerpoint, Extension)) {
-        return {type: "powerpoint", icon: "fa fa-file-powerpoint-o"};
+        return {type: "powerpoint", icon: "fa fa-file-powerpoint-o" , action: config.URLPrecursors.explorer};
     } else if (presentInArray(pdf, Extension)) {
-        return {type: "pdf", icon: "fa fa-file-pdf-o"};
+        return {type: "pdf", icon: "fa fa-file-pdf-o" , action: config.URLPrecursors.explorer};
     } else if (presentInArray(code, Extension)) {
-        return {type: "code", icon: "fa fa-file-code-o"};
+        return {type: "code", icon: "fa fa-file-code-o", action: config.URLPrecursors.explorer};
     } else if (presentInArray(archive, Extension)) {
-        return {type: "archive", icon: "fa fa-file-archive-o"};
+        return {type: "archive", icon: "fa fa-file-archive-o", action: config.URLPrecursors.explorer};
     } else if (presentInArray(spreadsheet, Extension)) {
-        return {type: "spreadsheet", icon: "fa fa-file-excel-o"};
+        return {type: "spreadsheet", icon: "fa fa-file-excel-o", action: config.URLPrecursors.explorer};
     } else if (presentInArray(text, Extension)) {
-        return {type: "text", icon: "fa fa-file-text-o"};
+        return {type: "text", icon: "fa fa-file-text-o", action: config.URLPrecursors.explorer};
     } else if (presentInArray(video, Extension)) {
-        return {type: "video", icon: "fa fa-file-video-o"};
+        return {type: "video", icon: "fa fa-file-video-o", action: config.URLPrecursors.videoPlayer};
     } else if (presentInArray(image, Extension)) {
-        return {type: "image", icon: "fa fa-file-image-o"};
+        return {type: "image", icon: "fa fa-file-image-o", action: config.URLPrecursors.imageViewer};
     } else if (presentInArray(chrome, Extension)) {
-        return {type: "html", icon: "fa fa-chrome"};
+        return {type: "html", icon: "fa fa-chrome", action: config.URLPrecursors.explorer};
     } else if (presentInArray(executable, Extension)) {
-        return {type: "executable", icon: "fa fa-laptop"};
+        return {type: "executable", icon: "fa fa-laptop", action: config.URLPrecursors.explorer};
     }
-    return {type: "unknown", icon: "fa fa-file-o"}
+    return {type: "unknown", icon: "fa fa-file-o", action: config.URLPrecursors.explorer} //if there is no action it will just download the file
 } //Returns a sting that is a class for awesome font
+
+function toHumanSize(bytes) {
+    if (bytes < 10e3) {
+        return `${bytes} B`;
+    }else if (bytes < 10e5) {
+        return `${Math.round(bytes / 10e2)} KB`;
+    }else if (bytes < 10e8) {
+        return `${Math.round(bytes / 10e5)} MB`;
+    }else if (bytes < 10e11) {
+        return `${Math.round(bytes / 10e8)} GB`;
+    }else if (bytes < 10e14) {
+        return `${Math.round(bytes / 10e11)} TB`;
+    }else {
+        return 'A lot.'; // Shhhh
+    }
+}
 
 module.exports = router;
