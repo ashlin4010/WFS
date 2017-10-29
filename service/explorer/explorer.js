@@ -24,7 +24,6 @@ router.get("/"+url+"*", function(req, res) {
     //Is the stuff after url is working directory(s) if so add it to the end of workingAddress and workingDir.
     for (let i = 0; i < address.length; i++) {
 
-
         //is dir??
         if (presentInArray(findFiles(workingDir), address[i]) && fs.lstatSync(path.join(workingDir, address[i])).isDirectory()) {
             workingAddress.push(address[i]);
@@ -121,7 +120,7 @@ function fileExtension(fileName) {
     } else if (presentInArray(powerpoint, Extension)) {
         return {type: "powerpoint", icon: "fa fa-file-powerpoint-o" , action: config.URLPrecursors.explorer};
     } else if (presentInArray(pdf, Extension)) {
-        return {type: "pdf", icon: "fa fa-file-pdf-o" , action: config.URLPrecursors.explorer};
+        return {type: "pdf", icon: "fa fa-file-pdf-o" , action: config.URLPrecursors.pdfViewer};
     } else if (presentInArray(code, Extension)) {
         return {type: "code", icon: "fa fa-file-code-o", action: config.URLPrecursors.explorer};
     } else if (presentInArray(archive, Extension)) {

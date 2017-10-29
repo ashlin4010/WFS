@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        embed {
+            display: block;       /* iframes are inline by default */
+            background: #000;
+            border: none;         /* Reset default border */
+            height: 100vh;        /* Viewport-relative units */
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+<embed src="/<%=(path.join(url.explorer,pdf)).replace(/\\/g, "/")%>">
+</body>
+</html>

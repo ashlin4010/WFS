@@ -12,6 +12,7 @@ const upload = require("./service/upload/upload.js");
 const videoPlayer = require("./service/videoPlayer/vp.js");
 const audioPlayer = require("./service/audio.js");
 const image = require("./service/image.js");
+const pdf = require("./service/pdf.js");
 
 app.set('view engine', 'ejs'); //Set the view engine to ejs
 app.use(express.static(path.join(__dirname, 'public')));//Set path to static files for webPage stuff
@@ -26,6 +27,7 @@ app.use("/",upload);
 app.use("/",videoPlayer);
 app.use("/",audioPlayer);
 app.use("/",image);
+app.use("/",pdf);
 
 
 app.get("/",function (req, res) {
